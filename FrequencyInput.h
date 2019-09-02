@@ -2,8 +2,19 @@
 #define FREQUENCY_INPUT_H
 
 #define SYNC_FrequencyInput INPUT
+
+#define CFG_Time_PerSecond 10000
+long Temp = CFG_Time_PerSecond; //
+int Pulses = Temp; //
+
+boolean Pulse; //
 unsigned int FrequencyMode; //
+int PulseLow; //
+int PulseHigh; //
 float FrequencyResult; //
+float Frequency; //
+
+unsigned long PERIOD = 1000;
 
 float ResultOfLowFrequency; //
 float ResultOfMiddleFrequency; //
@@ -12,61 +23,52 @@ char SetValue_Hz[] = {"Hz"}; //
 char SetValue_kHz[] = {"kHz"}; //
 char SetValue_MHz[] = {"MHz"}; //
 
-static uint16_t count_msw;
-static uint32_t count_prev;
-static volatile uint32_t count_output;
-static volatile uint8_t count_ready;
-static uint16_t gate_length;
-static uint16_t gate_index;
-
-
 class FrequencyInput
 {
   public:
   FrequencyInput(int SynchInput){
   float InputFrequ = SynchInput; //
   pinMode(InputFrequ, SYNC_FrequencyInput); //
-  FrequencyMode = digitalRead(InputFrequ); //
-//  FrequencyMode = pulseIn(InputFrequ); //
-  //FrequencyMode = pulseIn(_PinInput, HIGH); //
+  //FrequencyMode = digitalRead(InputFrequ); //
   };
   static void begin(uint16_t delay_ms){
-    if (delay_ms < 10) return;
-  gate_index = 0;
-  count_msw = 0;
-  count_prev = 0;
-  count_ready = 0;
-//  counter_init();
-//  gate_length = timer_init(delay_ms);
-  uint8_t status = SREG;
-  cli();
-//  timer_start();
-//  timer_isr_latency_delay();
-//  counter_start();
-  SREG = status;
-
+    
   }; //
-  static uint8_t available(void){
-  return count_ready;
-    }; //
+  //static uint8_t available(void){}; //
   static uint32_t read(void){
-    uint32_t count;
-    uint8_t status;
-    status = SREG;
-    cli();
-    count = count_output;
-    count_ready = 0;
-    SREG = status;
-    return count;
+//PulseLow = pulseIn(InputFrequ, LOW);
+//  PulseHigh = pulseIn(InputFrequ, HIGH);
     }; //
-  static void end(void){
-//    timer_shutdown();
-//    counter_shutdown();
-    }; //
+
+void setLow(){
+//if(LF){}float LF
+
+    Pulses = PulseLow + PulseHigh; //
+    ResultOfLowFrequency = Pulses / 1000;
+    delay(Temp); //
+}
+
+void setMiddle(){
+//if(MF){}float MF
+    Pulses = PulseLow + PulseHigh; //
+    ResultOfMiddleFrequency = Pulses / 1000000;
+    delay(Temp); //
+}
+
+void setHigh(){
+  //if(HF){ }float HF
+    Pulses = PulseLow + PulseHigh; //
+    ResultOfHighFrequency = Pulses / 1000000000;
+    delay(Temp); //
+}
+
+static void end(){
   
+}
+
   private:
   static volatile unsigned int _PinInput;
-  
+
   protected:
 };
 
