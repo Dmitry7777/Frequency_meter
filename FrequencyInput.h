@@ -44,11 +44,11 @@ class FrequencyInput
   public:
   FrequencyInput(int SynchInput){
   PROCESS_FrequencyInput = SynchInput; //
-  pinMode(PROCESS_FrequencyInput, IO_MCU_FrequencyInput); //
   
   };
   
   static void begin(){
+    pinMode(PROCESS_FrequencyInput, IO_MCU_FrequencyInput); //
     PULSE = HIGH; //
   }; //
   
