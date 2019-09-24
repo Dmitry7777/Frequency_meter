@@ -4,6 +4,16 @@
 #define IO_MCU_FrequencyInput INPUT
 
 #define CFG_Time_PerSecond 10000
+
+#define CFG_MaximalLowFrequency 2000
+#define CFG_MaximalMiddleFrequency 2000000
+#define CFG_MaximalHighFrequency 2000000000
+#define PulseDivider 2
+
+unsigned int MLF = CFG_MaximalLowFrequency;
+unsigned int MMF = CFG_MaximalMiddleFrequency;
+unsigned int MHF = CFG_MaximalHighFrequency;
+
 int PROCESS_FrequencyInput; //
 long Temp = CFG_Time_PerSecond; //
 int Pulses = Temp; //
@@ -12,10 +22,15 @@ boolean Pulse; //
 unsigned int FrequencyMode; //
 int PulseLow; //
 int PulseHigh; //
+float PulseTotal; //
 float FrequencyResult; //
 float Frequency; //
-
 unsigned long PERIOD = 1000;
+
+long FREQU; //Enabled frequency to results which will be displayed on the terminal device
+long TIME; //Enabled period time
+bool PULSE; //Enabled pulse per time
+int PULSES; //Enabled period pulses
 
 float ResultOfLowFrequency; //
 float ResultOfMiddleFrequency; //
@@ -29,38 +44,75 @@ class FrequencyInput
   public:
   FrequencyInput(int SynchInput){
   PROCESS_FrequencyInput = SynchInput; //
-  pinMode(SynchInput, IO_MCU_FrequencyInput); //
-  FrequencyMode = digitalRead(SynchInput); //
+  pinMode(PROCESS_FrequencyInput, IO_MCU_FrequencyInput); //
+  
   };
-  static void begin(uint16_t delay_ms){
-    
+  
+  static void begin(){
+    PULSE = HIGH; //
   }; //
-  //static uint8_t available(void){}; //
-  static uint32_t read(void){
-//    PulseLow = pulseIn(InputFrequ, LOW);
-//    PulseHigh = pulseIn(InputFrequ, HIGH);
+  
+  static uint8_t available(){}; //
+  
+  static uint32_t read(const int SynchInput){
+    FrequencyMode = digitalRead(SynchInput); //
     }; //
 
 void setLow(){
-//if(LF){}float LF
+TIME = millis(); //
+if(digitalRead(PROCESS_FrequencyInput)==HIGH){
+  if(PULSE == HIGH){
+    PULSES = PULSES + 1; //
+    }
+    PULSE = LOW; //
+  }
+else{
+  PULSE == HIGH; //
+  }
 
-    Pulses = PulseLow + PulseHigh; //
-    ResultOfLowFrequency = Pulses / 2000;
-    delay(Temp); //
+if(TIME % MLF == 0){
+  FREQU = PULSE /2; //
+  PULSES = 0; //
+  }
+
 }
 
 void setMiddle(){
-//if(MF){}float MF
-    Pulses = PulseLow + PulseHigh; //
-    ResultOfMiddleFrequency = Pulses / 2000000;
-    delay(Temp); //
+  TIME = millis(); //
+if(digitalRead(PROCESS_FrequencyInput)==HIGH){
+  if(PULSE == HIGH){
+    PULSES = PULSES + 1; //
+    }
+    PULSE = LOW; //
+  }
+else{
+  PULSE == HIGH; //
+  }
+
+if(TIME % MMF == 0){
+  FREQU = PULSE /2; //
+  PULSES = 0; //
+  }
+
 }
 
 void setHigh(){
-  //if(HF){ }float HF
-    Pulses = PulseLow + PulseHigh; //
-    ResultOfHighFrequency = Pulses / 2000000000;
-    delay(Temp); //
+  TIME = millis(); //
+if(digitalRead(PROCESS_FrequencyInput)==HIGH){
+  if(PULSE == HIGH){
+    PULSES = PULSES + 1; //
+    }
+    PULSE = LOW; //
+  }
+else{
+  PULSE == HIGH; //
+  }
+
+if(TIME % MHF == 0){
+  FREQU = PULSE /2; //
+  PULSES = 0; //
+  }
+
 }
 
 static void end(){
@@ -72,5 +124,6 @@ static void end(){
 
   protected:
 };
+
 
 #endif
